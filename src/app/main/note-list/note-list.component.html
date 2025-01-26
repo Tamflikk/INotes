@@ -1,0 +1,24 @@
+<div class="p-3">
+    <!-- Botón "Create New Note" -->
+    <button class="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none">
+      + Create New Note
+    </button>
+  
+    <!-- Texto descriptivo -->
+    <p *ngIf="getDescription()" class="mb-4 text-gray-600">
+      {{ getDescription() }}
+    </p>
+  
+    <!-- Lista de notas -->
+    <div *ngFor="let note of getNotes()" class="mb-3 p-4 border border-gray-200 rounded-lg">
+      <h2 class="text-lg font-semibold text-gray-800">{{ note.title }}</h2>
+      <div class="flex items-center space-x-2 mt-2">
+        <span *ngFor="let tag of note.tags" class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+          {{ tag }}
+        </span>
+      </div>
+      <p class="mt-2 text-sm text-gray-500">
+        Last edited: {{ note.lastUpdate | date: 'mediumDate' }}
+      </p>
+    </div>
+  </div>
