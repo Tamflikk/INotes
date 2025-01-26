@@ -1,0 +1,68 @@
+<div class="h-full flex flex-col">
+  <!-- Título de la nota -->
+  <input
+    [(ngModel)]="title"
+    placeholder="Enter a title..."
+    class="w-full text-3xl font-bold mb-4 focus:outline-none placeholder-gray-400"
+  />
+
+  <!-- Tags -->
+  <div class="flex items-center mb-4">
+    <!-- Icono de tags -->
+    <img
+      src="assets/Tag.png"
+      alt="Tags"
+      class="w-5 h-5 mr-2"
+    />
+    <!-- Campo de tags -->
+    <input
+      [(ngModel)]="tags"
+      placeholder="Add tags separated by commas (e.g. Work, Planning)"
+      class="flex-1 p-2 focus:outline-none placeholder-gray-400"
+    />
+  </div>
+
+  <!-- Fecha de última edición -->
+  <div class="flex items-center mb-4">
+    <!-- Icono de calendario -->
+    <img
+      src="assets/CircleClock.png"
+      alt="Last Edited"
+      class="w-5 h-5 mr-2"
+    />
+    <!-- Texto de la fecha -->
+    <p class="text-sm text-gray-500">
+      Last edited: {{ selectedNote?.lastUpdate | date: 'mediumDate' || 'Not yet saved' }}
+    </p>
+  </div>
+
+  <!-- Línea divisoria -->
+  <div class="border-b border-gray-200 mb-6"></div>
+
+  <!-- Contenido de la nota -->
+  <textarea
+    [(ngModel)]="content"
+    placeholder="Start typing your note here..."
+    (keydown)="onKeyDown($event)"
+    class="w-full flex-1 p-2 focus:outline-none placeholder-gray-400 resize-none"
+  ></textarea>
+
+  <!-- Línea divisoria -->
+  <div class="border-b border-gray-200 mt-6 mb-4"></div>
+
+  <!-- Botones de acción -->
+  <div class="flex justify-end space-x-4">
+    <button
+      (click)="onCancel()"
+      class="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-lg focus:outline-none transition-colors"
+    >
+      Cancel
+    </button>
+    <button
+      (click)="onSave()"
+      class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition-colors"
+    >
+      Save Note
+    </button>
+  </div>
+</div>

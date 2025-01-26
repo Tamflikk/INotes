@@ -8,7 +8,6 @@ import { NoteService } from '../services/note.service'; // Importamos el servici
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
   uniqueTags: string[] = [];

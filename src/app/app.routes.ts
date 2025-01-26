@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { SignupComponent } from './signup/signup.component';
-import { MainComponent } from './main/main.component';
+import { LoginComponent } from './components/login/login.component';
+import { SignupComponent } from './components/signup/signup.component';
+import { MainComponent } from './components/main/main.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: 'notes', component: MainComponent }, // Ruta para las notas
-  { path: 'login', component: LoginComponent }, // Ruta para el login
-  { path: 'signup', component: SignupComponent }, // Ruta para el signup
-  { path: '', redirectTo: '/notes', pathMatch: 'full' }, // Redirigir a /notes por defecto
-  { path: '**', redirectTo: '/notes' } // Redirigir cualquier ruta no reconocida a /notes
+  { path: 'notes', component: MainComponent, canActivate: [AuthGuard] }, // Ruta protegida
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: '', redirectTo: '/notes', pathMatch: 'full' }, // Ruta por defecto
+  { path: '**', redirectTo: '/notes' }, // Ruta no encontrada
 ];

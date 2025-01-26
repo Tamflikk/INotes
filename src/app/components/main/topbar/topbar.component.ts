@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './topbar.component.html',
-  styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent {
   @Input() selectedCategory: string = 'All Notes'; // Recibe la categoría seleccionada

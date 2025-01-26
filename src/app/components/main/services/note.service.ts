@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NoteService {
   private notes: any[] = [
     {
+      id: 1, // ID único
       title: 'React Performance Optimization',
       content: `1. Code Splitting
 - Use React.lazy to load components dynamically.
@@ -23,9 +24,10 @@ export class NoteService {
 TODO: Benchmark performance improvements.`,
       tags: ['dev', 'react'],
       lastUpdate: new Date('2024-10-29'),
-      archived: false // No archivada
+      archived: false, // No archivada
     },
     {
+      id: 2, // ID único
       title: 'TypeScript Migration Guide',
       content: `1. Setup TypeScript
 - Install TypeScript and configure tsconfig.json.
@@ -42,9 +44,10 @@ TODO: Benchmark performance improvements.`,
 TODO: Document common issues and solutions.`,
       tags: ['dev', 'react', 'typescript'],
       lastUpdate: new Date('2024-10-26'),
-      archived: false // No archivada
+      archived: false, // No archivada
     },
     {
+      id: 3, // ID único
       title: 'Weekly Workout Plan',
       content: `Monday: Upper Body
 - Bench Press: 4 sets of 8-12 reps
@@ -61,9 +64,10 @@ Friday: Cardio
 TODO: Adjust plan based on progress.`,
       tags: ['dev', 'react'],
       lastUpdate: new Date('2024-10-25'),
-      archived: true // Archivada
+      archived: true, // Archivada
     },
     {
+      id: 4, // ID único
       title: 'React Component Library',
       content: `1. Button Component
 - Props: variant, size, onClick
@@ -80,9 +84,10 @@ TODO: Adjust plan based on progress.`,
 TODO: Add more components and improve documentation.`,
       tags: ['dev', 'react'],
       lastUpdate: new Date('2024-10-15'),
-      archived: false // No archivada
+      archived: false, // No archivada
     },
     {
+      id: 5, // ID único
       title: 'Reading List',
       content: `1. "Clean Code" by Robert C. Martin
 - Focus on writing readable and maintainable code.
@@ -96,22 +101,25 @@ TODO: Add more components and improve documentation.`,
 TODO: Add more books and track progress.`,
       tags: ['personal', 'dev'],
       lastUpdate: new Date('2024-10-05'),
-      archived: true // Archivada
-    }
+      archived: true, // Archivada
+    },
   ];
 
-  constructor() { }
+  private nextId = 6; // Contador para generar IDs únicos
+
+  constructor() {}
 
   // Obtener todas las notas (no archivadas por defecto)
   getNotes(archived: boolean = false): any[] {
-    return this.notes.filter(note => note.archived === archived);
+    return this.notes.filter((note) => note.archived === archived);
   }
 
   // Obtener tags únicos (excluyendo notas archivadas)
   getUniqueTags(): string[] {
     const tags = new Set<string>();
-    this.notes.forEach(note => {
-      if (!note.archived) { // Solo considerar notas no archivadas
+    this.notes.forEach((note) => {
+      if (!note.archived) {
+        // Solo considerar notas no archivadas
         note.tags.forEach((tag: string) => tags.add(tag));
       }
     });
@@ -120,19 +128,38 @@ TODO: Add more books and track progress.`,
 
   // Agregar una nueva nota
   addNote(note: any): void {
+    note.id = this.nextId++; // Asignar un ID único
+    note.lastUpdate = new Date(); // Establecer la fecha de última actualización
+    note.archived = false; // Por defecto, no archivada
     this.notes.push(note);
+  }
+
+  // Actualizar una nota existente
+  updateNote(updatedNote: any): void {
+    const index = this.notes.findIndex((note) => note.id === updatedNote.id);
+    if (index !== -1) {
+      this.notes[index] = updatedNote;
+    }
   }
 
   // Filtrar notas por tag (excluyendo notas archivadas)
   getNotesByTag(tag: string, archived: boolean = false): any[] {
-    return this.notes.filter(note => note.tags.includes(tag) && note.archived === archived);
+    return this.notes.filter(
+      (note) => note.tags.includes(tag) && note.archived === archived
+    );
   }
 
   // Archivar o desarchivar una nota
   toggleArchiveNote(noteId: number): void {
-    const note = this.notes.find(note => note.id === noteId);
+    const note = this.notes.find((note) => note.id === noteId);
     if (note) {
-      note.archived = !note.archived;
+      note.archived = !note.archived; // Cambiar el estado de archivado
+      note.lastUpdate = new Date(); // Actualizar la fecha de última edición
     }
+  }
+
+  // Obtener una nota por su ID
+  getNoteById(noteId: number): any {
+    return this.notes.find((note) => note.id === noteId);
   }
 }

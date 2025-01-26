@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NoteService } from '../services/note.service';
 
@@ -7,16 +7,14 @@ import { NoteService } from '../services/note.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './note-list.component.html',
-  styleUrls: ['./note-list.component.css']
 })
 export class NoteListComponent {
   @Input() selectedTag: string | null = null;
-  @Input() showArchived: boolean = false; // Mostrar notas archivadas o no
-  notes: any[] = [];
+  @Input() showArchived: boolean = false;
+  @Input() selectedNote: any = null; // Nota seleccionada
+  @Output() noteSelected = new EventEmitter<any>(); // Evento para seleccionar una nota
 
-  constructor(private noteService: NoteService) {
-    this.notes = this.noteService.getNotes(this.showArchived);
-  }
+  constructor(private noteService: NoteService) {}
 
   // Obtener notas según el tag y el estado de archivado
   getNotes(): any[] {
@@ -24,6 +22,11 @@ export class NoteListComponent {
       return this.noteService.getNotesByTag(this.selectedTag, this.showArchived);
     }
     return this.noteService.getNotes(this.showArchived);
+  }
+
+  // Seleccionar una nota
+  selectNote(note: any): void {
+    this.noteSelected.emit(note); // Emitir la nota seleccionada
   }
 
   // Obtener el texto descriptivo

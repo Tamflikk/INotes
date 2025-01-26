@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,36 +17,23 @@ export class LoginComponent {
   errorMessage: string = '';
   isLoading: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
     this.errorMessage = '';
-  
-    const savedUser = localStorage.getItem('user');
-    if (!savedUser) {
-      this.errorMessage = 'Email does not exist. Please sign up.';
-      return;
-    }
-  
-    const user = JSON.parse(savedUser);
-  
-    if (user.email !== this.email) {
-      this.errorMessage = 'Email does not exist. Please sign up.';
-      return;
-    }
-  
-    if (user.password !== this.password) {
-      this.errorMessage = 'Incorrect password. Please try again.';
-      return;
-    }
-  
     this.isLoading = true;
-  
-    setTimeout(() => {
-      this.isLoading = false; // Restablece el estado de carga
-      this.router.navigate(['/notes']);
-    }, 3000);
+
+    if (this.authService.login(this.email, this.password)) {
+      setTimeout(() => {
+        this.isLoading = false;
+        this.router.navigate(['/notes']);
+      }, 2000);
+    } else {
+      this.errorMessage = 'Invalid email or password.';
+      this.isLoading = false;
+    }
   }
+
   loginWithGoogle() {
     console.log('Login with Google');
   }
