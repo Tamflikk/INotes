@@ -14,9 +14,10 @@ export class NoteListComponent implements OnInit {
   @Input() selectedNote: any = null;
   @Output() noteSelected = new EventEmitter<any>();
 
-  constructor(private noteService: NoteService) {}
+  constructor(public noteService: NoteService) {}
 
   isEditorActive: boolean = false;
+  searchQuery: string = '';
 
   ngOnInit() {
     this.noteService.noteAdded.subscribe(() => {
@@ -28,12 +29,21 @@ export class NoteListComponent implements OnInit {
       this.selectedTag = null;
       this.showArchived = category === 'Archived Notes';
     });
+
+    this.noteService.searchQueryChanged.subscribe((query: string) => {
+      this.searchQuery = query;
+    });
   }
 
   getNotes(): any[] {
+    if (this.searchQuery) {
+      return this.noteService.searchNotes(this.searchQuery, this.showArchived);
+    }
+    
     if (this.selectedTag) {
       return this.noteService.getNotesByTag(this.selectedTag, this.showArchived);
     }
+    
     return this.noteService.getNotes(this.showArchived);
   }
 

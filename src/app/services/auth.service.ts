@@ -62,4 +62,30 @@ export class AuthService {
       localStorage.setItem(this.IS_LOGGED_IN_KEY, 'true');
     }
   }
+
+  // app/services/auth.service.ts
+
+changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!this.isLocalStorageAvailable()) {
+      return reject('LocalStorage no está disponible.');
+    }
+
+    const savedUser = localStorage.getItem(this.USER_KEY);
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+
+      if (user.password !== currentPassword) {
+        return reject('La contraseña actual no es correcta.');
+      }
+
+      user.password = newPassword; // Actualiza la contraseña
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user)); // Guarda los cambios
+      resolve();
+    } else {
+      reject('Usuario no encontrado.');
+    }
+  });
+}
+
 }

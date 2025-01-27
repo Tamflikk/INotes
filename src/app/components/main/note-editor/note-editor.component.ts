@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NoteService } from '../services/note.service';
+import { DeleteNoteDialogComponent } from '../dialogs/delete-note.component';
 
 @Component({
   selector: 'app-note-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DeleteNoteDialogComponent],
   templateUrl: './note-editor.component.html',
 })
 export class NoteEditorComponent implements OnChanges {
@@ -120,6 +121,12 @@ export class NoteEditorComponent implements OnChanges {
       this.resetForm();
       this.cancelEdit.emit();
     }
+  }
+
+  onDeleteConfirmed(noteId: string): void {
+    this.noteService.deleteNote(noteId);
+    this.resetForm();
+    this.cancelEdit.emit();
   }
 
   resetForm(): void {

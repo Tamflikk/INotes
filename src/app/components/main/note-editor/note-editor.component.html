@@ -63,14 +63,9 @@
       {{ selectedNote?.archived ? 'Unarchive Note' : 'Archive Note' }}
     </button>
 
-    <button
-      (click)="onDelete()"
-      [disabled]="!selectedNote?.id"
-      class="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 focus:outline-none transition-colors"
-      [ngClass]="{'opacity-50 cursor-not-allowed': !selectedNote?.id}"
-    >
-      <img src="assets/Delete.png" alt="Delete" class="w-4 h-4 mr-2" />
-      Delete Note
-    </button>
+    <app-delete-note-dialog
+      [noteId]="selectedNote?.id"
+      (deleteConfirmed)="onDeleteConfirmed($event)"
+    ></app-delete-note-dialog>
   </div>
 </div>

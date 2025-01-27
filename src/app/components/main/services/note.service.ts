@@ -20,6 +20,7 @@ export class NoteService {
   categoryChanged = new EventEmitter<string>();
   noteArchived = new EventEmitter<string>();
   noteAdded = new EventEmitter<void>();
+  searchQueryChanged = new EventEmitter<string>();
   
   constructor() {
     const savedNotes = localStorage.getItem('notes');
@@ -133,5 +134,39 @@ export class NoteService {
       this.saveToLocalStorage();
       this.clearUnsavedChanges(id);
     }
+  }
+
+  searchNotes(query: string, showArchived: boolean = false): Note[] {
+    if (!query.trim()) {
+      return this.getNotes(showArchived);
+    }
+
+    const searchTerms = query.toLowerCase().trim().split(' ');
+    
+    const filteredNotes = this.notes.filter(note => {
+      if (note.archived !== showArchived) return false;
+
+      return searchTerms.every(term => 
+        note.title.toLowerCase().includes(term) ||
+        note.content.toLowerCase().includes(term) ||
+        note.tags.some(tag => tag.toLowerCase().includes(term))
+      );
+    });
+
+    return this.sortNotesByLastUpdate(filteredNotes);
+  }
+
+  highlightText(text: string, searchQuery: string): string {
+    if (!searchQuery.trim()) return text;
+    
+    const searchTerms = searchQuery.toLowerCase().trim().split(' ');
+    let highlightedText = text;
+    
+    searchTerms.forEach(term => {
+      const regex = new RegExp(`(${term})`, 'gi');
+      highlightedText = highlightedText.replace(regex, '<mark class="bg-yellow-200">$1</mark>');
+    });
+    
+    return highlightedText;
   }
 }
