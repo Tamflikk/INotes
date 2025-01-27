@@ -60,14 +60,30 @@
   <div class="px-4 pt-2 flex-1 overflow-y-auto">
     <h3 class="text-sm font-semibold text-gray-500 mb-4">Tags</h3>
     <ul class="space-y-2">
+      <!-- Display message if no tags exist -->
+      <li *ngIf="uniqueTags.length === 0">
+        <div class="text-gray-500 text-sm px-3 py-2">
+          No tags available to display.
+        </div>
+      </li>
+
+      <!-- displayIfExists -->
       <li *ngFor="let tag of uniqueTags">
         <div
           (click)="selectTag(tag)"
-          class="flex items-center text-gray-800 hover:text-[#335CFF] hover:bg-[#F3F5F8] px-3 py-2 rounded-md block transition-colors cursor-pointer"
+          class="flex items-center justify-between text-gray-800 hover:text-[#335CFF] hover:bg-[#F3F5F8] px-3 py-2 rounded-md block transition-colors cursor-pointer"
           [ngClass]="{ 'bg-[#F3F5F8] text-[#335CFF]': isTagSelected(tag) }"
         >
-          <img src="assets/Tag.png" alt="Tag" class="w-5 h-5 mr-2" />
-          {{ tag }}
+          <div class="flex items-center">
+            <img src="assets/Tag.png" alt="Tag" class="w-5 h-5 mr-2" />
+            {{ tag }}
+          </div>
+          <img
+            *ngIf="isTagSelected(tag)"
+            src="assets/ArrowRight.png"
+            alt="Selected"
+            class="w-4 h-4"
+          />
         </div>
       </li>
     </ul>
