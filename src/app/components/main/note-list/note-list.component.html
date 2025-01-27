@@ -16,12 +16,19 @@
   <div
     *ngFor="let note of getNotes()"
     (click)="selectNote(note)"
-    class="mb-3 p-4 border cursor-pointer transition-all duration-300 ease-in-out rounded-md"
+    class="mb-3 p-4 border cursor-pointer transition-all duration-300 ease-in-out rounded-md relative"
     [ngClass]="{
       'bg-blue-50 border-blue-400 shadow-md': selectedNote?.id === note.id,
       'hover:bg-gray-50 border-gray-200': selectedNote?.id !== note.id
     }"
   >
+    <!-- Indicador de cambios no guardados -->
+    <div 
+      *ngIf="hasUnsavedChanges(note)"
+      class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full"
+      title="This note has unsaved changes">
+    </div>
+
     <h2 class="text-lg font-semibold transition-colors duration-300 ease-in-out"
         [ngClass]="{
           'text-blue-600': selectedNote?.id === note.id,
@@ -51,6 +58,19 @@
          'text-gray-500': selectedNote?.id !== note.id
        }">
       Last edited: {{ note.lastUpdate | date: 'mediumDate' }}
+    </p>
+
+    <!-- Preview del contenido -->
+    <p class="mt-2 text-sm text-gray-600 line-clamp-2">
+      {{ note.content }}
+    </p>
+  </div>
+
+  <!-- Mensaje cuando no hay notas -->
+  <div *ngIf="getNotes().length === 0" class="text-center text-gray-500 mt-8">
+    <p class="text-lg">No notes found</p>
+    <p class="text-sm mt-2">
+      {{ showArchived ? 'All your archived notes are stored here. You can restore or delete them anytime.' : 'Click the button above to create your first note.' }}
     </p>
   </div>
 </div>

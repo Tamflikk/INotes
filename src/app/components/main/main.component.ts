@@ -40,12 +40,21 @@ export class MainComponent {
       this.router.navigate(['/login']);
     }
 
+    // Suscribirse a los cambios en el estado de archivado
+    this.noteService.noteArchived.subscribe((noteId: string) => {
+      if (this.selectedNote && this.selectedNote.id === noteId) {
+        const updatedNote = this.noteService.getNote(noteId);
+        if (updatedNote) {
+          this.selectedNote = updatedNote;
+        }
+      }
+    });
+
     setTimeout(() => {
       this.isLoading = false;
     }, 3000);
   }
 
-  // Seleccionar una nota
   onNoteSelected(note: any): void {
     this.selectedNote = note;
   }
@@ -60,6 +69,7 @@ export class MainComponent {
     this.selectedNote = note;
     this.selectedCategory = 'All Notes';
     this.selectedTag = null;
+    this.showArchived = false;
 
     this.noteService.categoryChanged.emit('All Notes');
   }
@@ -72,13 +82,13 @@ export class MainComponent {
     this.selectedCategory = category;
     this.selectedTag = null;
     this.showArchived = category === 'Archived Notes';
-    console.log('Categoría seleccionada:', category);
+    this.selectedNote = null;
   }
 
   updateSelectedTag(tag: string): void {
     this.selectedTag = tag;
     this.selectedCategory = 'Notes Tagged: ' + tag;
     this.showArchived = false;
-    console.log('Tag seleccionado:', tag);
+    this.selectedNote = null;
   }
 }

@@ -1,3 +1,13 @@
+export interface Note {
+  id: string | null;
+  title: string;
+  content: string;
+  tags: string[];
+  lastUpdate: Date;
+  archived: boolean;
+  hasUnsavedChanges?: boolean;
+}
+
 export const initialNotes = [
     {
       id: 1,

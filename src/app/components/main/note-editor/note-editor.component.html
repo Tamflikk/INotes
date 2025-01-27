@@ -1,23 +1,18 @@
-<!-- Note Editor: Updated Template -->
 <div class="h-full flex flex-col">
   <!-- Título de la nota -->
   <input
     [(ngModel)]="title"
+    (ngModelChange)="onInputChange()"
     placeholder="Enter a title..."
     class="w-full text-3xl font-bold mb-4 focus:outline-none placeholder-gray-400"
   />
 
   <!-- Tags -->
   <div class="flex items-center mb-4">
-    <!-- Icono de tags -->
-    <img
-      src="assets/Tag.png"
-      alt="Tags"
-      class="w-5 h-5 mr-2"
-    />
-    <!-- Campo de tags -->
+    <img src="assets/Tag.png" alt="Tags" class="w-5 h-5 mr-2" />
     <input
       [(ngModel)]="tags"
+      (ngModelChange)="onInputChange()"
       placeholder="Add tags separated by commas (e.g. Work, Planning)"
       class="flex-1 p-2 focus:outline-none placeholder-gray-400"
     />
@@ -25,54 +20,54 @@
 
   <!-- Fecha de última edición -->
   <div class="flex items-center mb-4">
-    <!-- Icono de calendario -->
-    <img
-      src="assets/CircleClock.png"
-      alt="Last Edited"
-      class="w-5 h-5 mr-2"
-    />
+    <img src="assets/CircleClock.png" alt="Last Edited" class="w-5 h-5 mr-2" />
     <p class="text-sm text-gray-500">
       Last edited: {{ selectedNote?.lastUpdate | date: 'mediumDate' || 'Not yet saved' }}
     </p>
   </div>
 
-  <!-- Línea divisoria -->
   <div class="border-b border-gray-200 mb-6"></div>
 
   <!-- Contenido de la nota -->
   <textarea
     [(ngModel)]="content"
+    (ngModelChange)="onInputChange()"
     placeholder="Start typing your note here..."
     (keydown)="onKeyDown($event)"
     class="w-full flex-1 p-2 focus:outline-none placeholder-gray-400 resize-none"
   ></textarea>
 
-  <!-- Línea divisoria -->
   <div class="border-b border-gray-200 mt-6 mb-4"></div>
 
   <!-- Botones de acción -->
   <div class="flex justify-start space-x-4">
-    <!-- Guardar -->
     <button
       (click)="onSave()"
-      class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition-colors"
+      [disabled]="!hasUnsavedChanges"
+      class="flex items-center px-4 py-2 rounded-lg transition-colors"
+      [ngClass]="{
+        'bg-blue-500 text-white hover:bg-blue-600': hasUnsavedChanges,
+        'bg-gray-200 text-gray-400 cursor-not-allowed': !hasUnsavedChanges
+      }"
     >
       Save Note
     </button>
 
-    <!-- Archivar/Desarchivar -->
     <button
       (click)="onArchive()"
+      [disabled]="!selectedNote?.id"
       class="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 focus:outline-none transition-colors"
+      [ngClass]="{'opacity-50 cursor-not-allowed': !selectedNote?.id}"
     >
       <img src="assets/Archive.png" alt="Archive/Unarchive" class="w-4 h-4 mr-2"/>
       {{ selectedNote?.archived ? 'Unarchive Note' : 'Archive Note' }}
     </button>
 
-    <!-- Eliminar -->
     <button
       (click)="onDelete()"
+      [disabled]="!selectedNote?.id"
       class="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 focus:outline-none transition-colors"
+      [ngClass]="{'opacity-50 cursor-not-allowed': !selectedNote?.id}"
     >
       <img src="assets/Delete.png" alt="Delete" class="w-4 h-4 mr-2" />
       Delete Note

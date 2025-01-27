@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NoteService } from '../services/note.service';
@@ -9,76 +9,131 @@ import { NoteService } from '../services/note.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './note-editor.component.html',
 })
-export class NoteEditorComponent {
-  @Input() selectedNote: any = null; // Nota seleccionada para editar
-  @Output() saveNote = new EventEmitter<any>(); // Evento para guardar la nota
-  @Output() cancelEdit = new EventEmitter<void>(); // Evento para cancelar la edición
-  @Output() archiveNote = new EventEmitter<void>(); // Evento para archivar/desarchivar la nota
-  @Output() deleteNote = new EventEmitter<void>(); // Evento para eliminar la nota
+export class NoteEditorComponent implements OnChanges {
+  @Input() selectedNote: any = null;
+  @Output() saveNote = new EventEmitter<any>();
+  @Output() cancelEdit = new EventEmitter<void>();
 
   title: string = '';
   content: string = '';
   tags: string = '';
   isEditing: boolean = false;
+  hasUnsavedChanges: boolean = false;
+  originalNote: any = null;
 
   constructor(private noteService: NoteService) {}
 
-  // Cuando se selecciona una nota para editar
-  ngOnChanges(): void {
-    if (this.selectedNote) {
-      this.title = this.selectedNote.title;
-      this.content = this.selectedNote.content;
-      this.tags = this.selectedNote.tags.join(', ');
-      this.isEditing = true;
-    } else {
-      this.resetForm();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedNote']) {
+      if (this.selectedNote) {
+        // Verificar si hay cambios no guardados
+        const unsavedNote = this.noteService.getUnsavedNote(this.selectedNote.id);
+        if (unsavedNote) {
+          this.title = unsavedNote.title;
+          this.content = unsavedNote.content;
+          this.tags = unsavedNote.tags.join(', ');
+        } else {
+          this.title = this.selectedNote.title;
+          this.content = this.selectedNote.content;
+          this.tags = this.selectedNote.tags.join(', ');
+        }
+        this.originalNote = {
+          title: this.selectedNote.title,
+          content: this.selectedNote.content,
+          tags: [...this.selectedNote.tags]
+        };
+        this.isEditing = true;
+      } else {
+        this.resetForm();
+      }
+      this.checkForChanges();
     }
   }
 
-  // Guardar la nota
-  onSave(): void {
-    const note = {
-      id: this.selectedNote ? this.selectedNote.id : null,
+  onInputChange(): void {
+    this.checkForChanges();
+    if (this.selectedNote?.id) {
+      const currentNote = this.getCurrentNoteState();
+      this.noteService.saveTemporaryChanges(currentNote);
+    }
+  }
+
+  private getCurrentNoteState(): any {
+    return {
+      id: this.selectedNote?.id,
       title: this.title,
       content: this.content,
-      tags: this.tags.split(',').map((tag: string) => tag.trim()),
+      tags: this.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       lastUpdate: new Date(),
-      archived: this.selectedNote ? this.selectedNote.archived : false,
+      archived: this.selectedNote?.archived || false,
     };
+  }
 
-    // Emitir el evento saveNote en todos los casos
+  private checkForChanges(): void {
+    if (!this.originalNote) {
+      this.hasUnsavedChanges = this.title !== '' || 
+                              this.content !== '' || 
+                              this.tags !== '';
+    } else {
+      const currentTags = this.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+      this.hasUnsavedChanges = 
+        this.title !== this.originalNote.title ||
+        this.content !== this.originalNote.content ||
+        !this.areTagsEqual(currentTags, this.originalNote.tags);
+    }
+  }
+
+  private areTagsEqual(tags1: string[], tags2: string[]): boolean {
+    return tags1.length === tags2.length && 
+           tags1.every(tag => tags2.includes(tag));
+  }
+
+  onSave(): void {
+    if (!this.hasUnsavedChanges) return;
+
+    const note = this.getCurrentNoteState();
+    
     this.saveNote.emit(note);
+    if (note.id) {
+      this.noteService.clearUnsavedChanges(note.id);
+    }
     this.resetForm();
   }
 
-  // Cancelar la edición
   onCancel(): void {
+    if (this.selectedNote?.id) {
+      this.noteService.clearUnsavedChanges(this.selectedNote.id);
+    }
     this.cancelEdit.emit();
     this.resetForm();
   }
 
-  // Archivar o desarchivar la nota
   onArchive(): void {
-    this.archiveNote.emit(); // Emitir evento para archivar/desarchivar la nota
+    if (this.selectedNote?.id) {
+      this.noteService.toggleArchiveNote(this.selectedNote.id);
+    }
   }
 
-  // Eliminar la nota
   onDelete(): void {
-    this.deleteNote.emit(); // Emitir evento para eliminar la nota
+    if (this.selectedNote?.id) {
+      this.noteService.deleteNote(this.selectedNote.id);
+      this.resetForm();
+      this.cancelEdit.emit();
+    }
   }
 
-  // Reiniciar el formulario
   resetForm(): void {
     this.title = '';
     this.content = '';
     this.tags = '';
     this.isEditing = false;
+    this.hasUnsavedChanges = false;
+    this.originalNote = null;
   }
 
-  // Manejar el guardado con Ctrl + S (o Cmd + S en Mac)
   onKeyDown(event: KeyboardEvent): void {
     if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-      event.preventDefault(); // Evitar el comportamiento por defecto del navegador
+      event.preventDefault();
       this.onSave();
     }
   }
