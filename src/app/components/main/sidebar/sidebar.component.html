@@ -1,10 +1,10 @@
 <div class="w-64 h-screen bg-white border-r border-gray-200 flex flex-col">
-  <!-- Logo -->
+  <!-- logo -->
   <div class="p-6">
     <img src="assets/logo.png" alt="Logo" class="w-32 h-auto" />
   </div>
 
-  <!-- Sección de Categorías -->
+  <!-- categoriesSection -->
   <div class="p-4 border-b border-gray-200">
     <ul class="space-y-2">
       <li>
@@ -12,13 +12,14 @@
           routerLink="/notes"
           (click)="selectCategory('All Notes')"
           class="flex items-center justify-between text-gray-800 hover:text-[#335CFF] hover:bg-[#F3F5F8] px-3 py-2 rounded-md block transition-colors cursor-pointer"
-          [ngClass]="{ 'bg-[#F3F5F8] text-[#335CFF]': isCategorySelected('All Notes') }"
+          [ngClass]="{
+            'bg-[#F3F5F8] text-[#335CFF]': isCategorySelected('All Notes')
+          }"
         >
           <div class="flex items-center">
             <img src="assets/Home.png" alt="All Notes" class="w-5 h-5 mr-2" />
             All Notes
           </div>
-          <!-- Flecha para la categoría seleccionada -->
           <img
             *ngIf="isCategorySelected('All Notes')"
             src="assets/ArrowRight.png"
@@ -32,13 +33,18 @@
           routerLink="/notes"
           (click)="selectCategory('Archived Notes')"
           class="flex items-center justify-between text-gray-800 hover:text-[#335CFF] hover:bg-[#F3F5F8] px-3 py-2 rounded-md block transition-colors cursor-pointer"
-          [ngClass]="{ 'bg-[#F3F5F8] text-[#335CFF]': isCategorySelected('Archived Notes') }"
+          [ngClass]="{
+            'bg-[#F3F5F8] text-[#335CFF]': isCategorySelected('Archived Notes')
+          }"
         >
           <div class="flex items-center">
-            <img src="assets/Archive.png" alt="Archived Notes" class="w-5 h-5 mr-2" />
+            <img
+              src="assets/Archive.png"
+              alt="Archived Notes"
+              class="w-5 h-5 mr-2"
+            />
             Archived Notes
           </div>
-          <!-- Flecha para la categoría seleccionada -->
           <img
             *ngIf="isCategorySelected('Archived Notes')"
             src="assets/ArrowRight.png"
@@ -50,7 +56,7 @@
     </ul>
   </div>
 
-  <!-- Sección de Tags -->
+  <!-- tagsSection -->
   <div class="px-4 pt-2 flex-1 overflow-y-auto">
     <h3 class="text-sm font-semibold text-gray-500 mb-4">Tags</h3>
     <ul class="space-y-2">

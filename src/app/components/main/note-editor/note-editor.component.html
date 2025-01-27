@@ -1,5 +1,5 @@
 <div class="h-full flex flex-col">
-  <!-- Título de la nota -->
+  <!-- noteTitle -->
   <input
     [(ngModel)]="title"
     (ngModelChange)="onInputChange()"
@@ -7,7 +7,7 @@
     class="w-full text-3xl font-bold mb-4 focus:outline-none placeholder-gray-400"
   />
 
-  <!-- Tags -->
+  <!-- tags -->
   <div class="flex items-center mb-4">
     <img src="assets/Tag.png" alt="Tags" class="w-5 h-5 mr-2" />
     <input
@@ -18,17 +18,18 @@
     />
   </div>
 
-  <!-- Fecha de última edición -->
+  <!-- lastUpdate -->
   <div class="flex items-center mb-4">
     <img src="assets/CircleClock.png" alt="Last Edited" class="w-5 h-5 mr-2" />
     <p class="text-sm text-gray-500">
-      Last edited: {{ selectedNote?.lastUpdate | date: 'mediumDate' || 'Not yet saved' }}
+      Last edited:
+      {{ selectedNote?.lastUpdate | date : "mediumDate" || "Not yet saved" }}
     </p>
   </div>
 
   <div class="border-b border-gray-200 mb-6"></div>
 
-  <!-- Contenido de la nota -->
+  <!-- noteContent -->
   <textarea
     [(ngModel)]="content"
     (ngModelChange)="onInputChange()"
@@ -39,7 +40,7 @@
 
   <div class="border-b border-gray-200 mt-6 mb-4"></div>
 
-  <!-- Botones de acción -->
+  <!-- buttons -->
   <div class="flex justify-start space-x-4">
     <button
       (click)="onSave()"
@@ -57,10 +58,14 @@
       (click)="onArchive()"
       [disabled]="!selectedNote?.id"
       class="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 focus:outline-none transition-colors"
-      [ngClass]="{'opacity-50 cursor-not-allowed': !selectedNote?.id}"
+      [ngClass]="{ 'opacity-50 cursor-not-allowed': !selectedNote?.id }"
     >
-      <img src="assets/Archive.png" alt="Archive/Unarchive" class="w-4 h-4 mr-2"/>
-      {{ selectedNote?.archived ? 'Unarchive Note' : 'Archive Note' }}
+      <img
+        src="assets/Archive.png"
+        alt="Archive/Unarchive"
+        class="w-4 h-4 mr-2"
+      />
+      {{ selectedNote?.archived ? "Unarchive Note" : "Archive Note" }}
     </button>
 
     <app-delete-note-dialog

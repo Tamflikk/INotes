@@ -39,11 +39,14 @@ export class NoteListComponent implements OnInit {
     if (this.searchQuery) {
       return this.noteService.searchNotes(this.searchQuery, this.showArchived);
     }
-    
+
     if (this.selectedTag) {
-      return this.noteService.getNotesByTag(this.selectedTag, this.showArchived);
+      return this.noteService.getNotesByTag(
+        this.selectedTag,
+        this.showArchived
+      );
     }
-    
+
     return this.noteService.getNotes(this.showArchived);
   }
 

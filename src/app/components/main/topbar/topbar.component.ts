@@ -11,9 +11,9 @@ import { SettingsMenuComponent } from '../settings-menu/settings-menu.component'
   templateUrl: './topbar.component.html',
 })
 export class TopbarComponent {
-  @Input() selectedCategory: string = 'All Notes'; // Recibe la categoría seleccionada
-  @Input() selectedTag: string | null = null; // Recibe el tag seleccionado
-  searchQuery: string = ''; // Valor de la barra de búsqueda
+  @Input() selectedCategory: string = 'All Notes';
+  @Input() selectedTag: string | null = null;
+  searchQuery: string = '';
 
   constructor(private noteService: NoteService) {}
 
@@ -24,7 +24,6 @@ export class TopbarComponent {
     }
   }
 
-  // Método para obtener el título dinámico
   getTitle(): string {
     if (this.selectedTag) {
       return `Notes Tagged: ${this.selectedTag}`;

@@ -19,18 +19,14 @@ export class SidebarComponent implements OnInit {
   constructor(private noteService: NoteService) {}
 
   ngOnInit(): void {
-    // Inicializar las etiquetas únicas
     this.uniqueTags = this.noteService.getUniqueTags();
 
-    // Suscribirse al evento noteAdded
     this.noteService.noteAdded.subscribe(() => {
       this.uniqueTags = this.noteService.getUniqueTags();
-      // Cuando se añade una nota, seleccionar "All Notes"
       this.selectedCategory = 'All Notes';
       this.selectedTag = null;
     });
 
-    // Suscribirse a cambios de categoría
     this.noteService.categoryChanged.subscribe((category: string) => {
       this.selectedCategory = category;
       this.selectedTag = null;

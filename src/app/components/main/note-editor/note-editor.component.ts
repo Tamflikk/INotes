@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NoteService } from '../services/note.service';
@@ -27,8 +34,10 @@ export class NoteEditorComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedNote']) {
       if (this.selectedNote) {
-        // Verificar si hay cambios no guardados
-        const unsavedNote = this.noteService.getUnsavedNote(this.selectedNote.id);
+        // Verify unsaved changes
+        const unsavedNote = this.noteService.getUnsavedNote(
+          this.selectedNote.id
+        );
         if (unsavedNote) {
           this.title = unsavedNote.title;
           this.content = unsavedNote.content;
@@ -41,7 +50,7 @@ export class NoteEditorComponent implements OnChanges {
         this.originalNote = {
           title: this.selectedNote.title,
           content: this.selectedNote.content,
-          tags: [...this.selectedNote.tags]
+          tags: [...this.selectedNote.tags],
         };
         this.isEditing = true;
       } else {
@@ -64,7 +73,10 @@ export class NoteEditorComponent implements OnChanges {
       id: this.selectedNote?.id,
       title: this.title,
       content: this.content,
-      tags: this.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      tags: this.tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter((tag) => tag),
       lastUpdate: new Date(),
       archived: this.selectedNote?.archived || false,
     };
@@ -72,12 +84,14 @@ export class NoteEditorComponent implements OnChanges {
 
   private checkForChanges(): void {
     if (!this.originalNote) {
-      this.hasUnsavedChanges = this.title !== '' || 
-                              this.content !== '' || 
-                              this.tags !== '';
+      this.hasUnsavedChanges =
+        this.title !== '' || this.content !== '' || this.tags !== '';
     } else {
-      const currentTags = this.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-      this.hasUnsavedChanges = 
+      const currentTags = this.tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter((tag) => tag);
+      this.hasUnsavedChanges =
         this.title !== this.originalNote.title ||
         this.content !== this.originalNote.content ||
         !this.areTagsEqual(currentTags, this.originalNote.tags);
@@ -85,15 +99,16 @@ export class NoteEditorComponent implements OnChanges {
   }
 
   private areTagsEqual(tags1: string[], tags2: string[]): boolean {
-    return tags1.length === tags2.length && 
-           tags1.every(tag => tags2.includes(tag));
+    return (
+      tags1.length === tags2.length && tags1.every((tag) => tags2.includes(tag))
+    );
   }
 
   onSave(): void {
     if (!this.hasUnsavedChanges) return;
 
     const note = this.getCurrentNoteState();
-    
+
     this.saveNote.emit(note);
     if (note.id) {
       this.noteService.clearUnsavedChanges(note.id);

@@ -9,7 +9,6 @@ import { ToastComponent } from './shared/components/toast/toast.component';
   imports: [CommonModule, RouterModule, ToastComponent],
   template: `<router-outlet></router-outlet>
   <app-toast></app-toast>`,
-  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'note-app';

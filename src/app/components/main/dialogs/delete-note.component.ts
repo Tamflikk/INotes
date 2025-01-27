@@ -23,12 +23,15 @@ import { CommonModule } from '@angular/common';
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       (click)="onBackdropClick($event)"
     >
-      <div class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden">
+      <div
+        class="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden"
+      >
         <!-- Header -->
         <div class="p-6 pb-0">
           <h2 class="text-lg font-semibold text-gray-900">Delete Note</h2>
           <p class="mt-2 text-sm text-gray-500">
-            Are you sure you want to permanently delete this note? This action cannot be undone.
+            Are you sure you want to permanently delete this note? This action
+            cannot be undone.
           </p>
         </div>
 
@@ -49,12 +52,12 @@ import { CommonModule } from '@angular/common';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export class DeleteNoteDialogComponent {
   @Input() noteId: string | null = null;
   @Output() deleteConfirmed = new EventEmitter<string>();
-  
+
   showDialog = false;
 
   onConfirmDelete() {

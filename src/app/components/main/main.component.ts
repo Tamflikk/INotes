@@ -4,7 +4,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { NoteListComponent } from './note-list/note-list.component';
 import { NoteEditorComponent } from './note-editor/note-editor.component';
-import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -19,7 +18,6 @@ import { NoteService } from './services/note.service';
     TopbarComponent,
     NoteListComponent,
     NoteEditorComponent,
-    RightSidebarComponent,
     LoadingSpinnerComponent,
   ],
   templateUrl: './main.component.html',
@@ -40,7 +38,6 @@ export class MainComponent {
       this.router.navigate(['/login']);
     }
 
-    // Suscribirse a los cambios en el estado de archivado
     this.noteService.noteArchived.subscribe((noteId: string) => {
       if (this.selectedNote && this.selectedNote.id === noteId) {
         const updatedNote = this.noteService.getNote(noteId);

@@ -1,5 +1,7 @@
-<div class="p-3 h-full overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
-  <!-- Botón "Create New Note" -->
+<div
+  class="p-3 h-full overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+>
+  <!-- newNote -->
   <button
     (click)="selectNote(null)"
     class="w-full mb-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
@@ -7,12 +9,12 @@
     + Create New Note
   </button>
 
-  <!-- Texto descriptivo -->
+  <!-- description -->
   <p *ngIf="getDescription()" class="mb-4 text-gray-600">
     {{ getDescription() }}
   </p>
 
-  <!-- Lista de notas -->
+  <!-- noteList -->
   <div
     *ngFor="let note of getNotes()"
     (click)="selectNote(note)"
@@ -22,52 +24,58 @@
       'hover:bg-gray-50 border-gray-200': selectedNote?.id !== note.id
     }"
   >
-    <!-- Indicador de cambios no guardados -->
-    <div 
+    <!-- dot -->
+    <div
       *ngIf="hasUnsavedChanges(note)"
       class="absolute top-2 right-2 w-2 h-2 bg-blue-500 rounded-full"
-      title="This note has unsaved changes">
-    </div>
+      title="This note has unsaved changes"
+    ></div>
 
-    <!-- Título con resaltado -->
-    <h2 class="text-lg font-semibold transition-colors duration-300 ease-in-out"
-        [ngClass]="{
-          'text-blue-600': selectedNote?.id === note.id,
-          'text-gray-800': selectedNote?.id !== note.id
-        }"
-        [innerHTML]="noteService.highlightText(note.title, searchQuery)">
-    </h2>
+    <!-- title -->
+    <h2
+      class="text-lg font-semibold transition-colors duration-300 ease-in-out"
+      [ngClass]="{
+        'text-blue-600': selectedNote?.id === note.id,
+        'text-gray-800': selectedNote?.id !== note.id
+      }"
+      [innerHTML]="noteService.highlightText(note.title, searchQuery)"
+    ></h2>
 
-    <!-- Tags con animación y resaltado -->
+    <!-- tags -->
     <div class="flex items-center flex-wrap gap-2 mt-2">
       <span
         *ngFor="let tag of note.tags"
         class="px-3 py-1 rounded text-sm font-medium border transition-all duration-300 ease-in-out"
         [ngClass]="{
-          'bg-blue-100 text-blue-600 border-blue-300': selectedNote?.id === note.id,
-          'bg-gray-100 text-gray-700 border-gray-300': selectedNote?.id !== note.id
+          'bg-blue-100 text-blue-600 border-blue-300':
+            selectedNote?.id === note.id,
+          'bg-gray-100 text-gray-700 border-gray-300':
+            selectedNote?.id !== note.id
         }"
         [innerHTML]="noteService.highlightText(tag, searchQuery)"
       >
       </span>
     </div>
 
-    <!-- Fecha con animación -->
-    <p class="mt-2 text-sm transition-colors duration-300 ease-in-out"
-       [ngClass]="{
-         'text-blue-500': selectedNote?.id === note.id,
-         'text-gray-500': selectedNote?.id !== note.id
-       }">
-      Last edited: {{ note.lastUpdate | date: 'mediumDate' }}
+    <!-- lastUpdate -->
+    <p
+      class="mt-2 text-sm transition-colors duration-300 ease-in-out"
+      [ngClass]="{
+        'text-blue-500': selectedNote?.id === note.id,
+        'text-gray-500': selectedNote?.id !== note.id
+      }"
+    >
+      Last edited: {{ note.lastUpdate | date : "mediumDate" }}
     </p>
 
-    <!-- Preview del contenido con resaltado -->
-    <p class="mt-2 text-sm text-gray-600 line-clamp-2"
-       [innerHTML]="noteService.highlightText(note.content, searchQuery)">
-    </p>
+    <!-- highlightPreview -->
+    <p
+      class="mt-2 text-sm text-gray-600 line-clamp-2"
+      [innerHTML]="noteService.highlightText(note.content, searchQuery)"
+    ></p>
   </div>
 
-  <!-- Mensaje cuando no hay notas -->
+  <!-- msgs -->
   <div *ngIf="getNotes().length === 0" class="text-center text-gray-500 mt-8">
     <p class="text-lg">No notes found</p>
     <p class="text-sm mt-2">
@@ -75,7 +83,11 @@
         No notes match your search criteria "{{ searchQuery }}"
       </ng-container>
       <ng-template #defaultMessage>
-        {{ showArchived ? 'All your archived notes are stored here. You can restore or delete them anytime.' : 'Click the button above to create your first note.' }}
+        {{
+          showArchived
+            ? "All your archived notes are stored here. You can restore or delete them anytime."
+            : "Write and save your first note to have it displayed right here."
+        }}
       </ng-template>
     </p>
   </div>

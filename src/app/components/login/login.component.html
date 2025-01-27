@@ -8,19 +8,18 @@
         <img src="assets/logo.png" alt="Logo" class="w-[7rem]" />
       </div>
 
-      <!-- Título -->
+      <!-- Title -->
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">
         Welcome to Note
       </h2>
 
-      <!-- Subtítulo -->
+      <!-- Subtitle -->
       <p class="text-sm text-center text-gray-600 mb-8">
         Please log in to continue
       </p>
 
-      <!-- Formulario de Login -->
+      <!-- loginForm -->
       <form (ngSubmit)="onLogin()" class="space-y-6">
-        <!-- Campo de Email -->
         <div>
           <label
             for="email"
@@ -38,7 +37,6 @@
           />
         </div>
 
-        <!-- Campo de Contraseña -->
         <div>
           <div class="flex justify-between items-center mb-1">
             <label
@@ -81,12 +79,12 @@
           </div>
         </div>
 
-        <!-- Mensaje de Error -->
+        <!-- errorMessage -->
         <div *ngIf="errorMessage" class="text-sm text-red-600">
           {{ errorMessage }}
         </div>
 
-        <!-- Botón de Login -->
+        <!-- loginButton -->
         <button
           type="submit"
           [disabled]="isLoading"
@@ -119,14 +117,14 @@
         </button>
       </form>
 
-      <!-- Separador -->
+      <!-- divider -->
       <div class="flex items-center my-6">
         <div class="flex-grow border-t border-gray-300"></div>
         <span class="mx-4 text-sm text-gray-600">Or log in with:</span>
         <div class="flex-grow border-t border-gray-300"></div>
       </div>
 
-      <!-- Botón de Google -->
+      <!-- googleButton -->
       <button
         (click)="loginWithGoogle()"
         class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-md py-2 px-4 text-sm text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -139,7 +137,7 @@
         Google
       </button>
 
-      <!-- Enlace para Registrarse -->
+      <!-- registerLink -->
       <p class="mt-6 text-center text-sm text-gray-600">
         No account yet?
         <a routerLink="/signup" class="text-blue-600 hover:underline"

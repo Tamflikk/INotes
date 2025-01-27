@@ -10,7 +10,7 @@ import { ToastService } from '../../../shared/services/toast.service';
   selector: 'app-settings-menu',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './settings-menu.component.html'
+  templateUrl: './settings-menu.component.html',
 })
 export class SettingsMenuComponent {
   isMenuOpen = false;
@@ -18,6 +18,7 @@ export class SettingsMenuComponent {
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
+  isSubmitting = false;
 
   constructor(
     private authService: AuthService,
@@ -31,12 +32,8 @@ export class SettingsMenuComponent {
 
   openChangePassword() {
     this.isMenuOpen = false;
-  
-    // Activar el panel con un pequeño retraso para permitir transiciones suaves
-    setTimeout(() => {
-      this.showPasswordPanel = true;
-    }, 10);
-  }  
+    this.showPasswordPanel = true;
+  }
 
   closePasswordPanel() {
     this.showPasswordPanel = false;
@@ -47,13 +44,17 @@ export class SettingsMenuComponent {
     this.currentPassword = '';
     this.newPassword = '';
     this.confirmPassword = '';
+    this.isSubmitting = false;
   }
 
   async onSubmit(event: Event) {
     event.preventDefault();
-    
+
     if (this.newPassword.length < 8) {
-      this.toastService.show('Password must be at least 8 characters long', 'error');
+      this.toastService.show(
+        'Password must be at least 8 characters long',
+        'error'
+      );
       return;
     }
 
@@ -62,13 +63,22 @@ export class SettingsMenuComponent {
       return;
     }
 
+    this.isSubmitting = true;
+
     try {
-      // Assuming authService has a changePassword method
-      await this.authService.changePassword(this.currentPassword, this.newPassword);
+      await this.authService.changePassword(
+        this.currentPassword,
+        this.newPassword
+      );
       this.toastService.show('Password changed successfully!', 'success');
       this.closePasswordPanel();
     } catch (error) {
-      this.toastService.show('Failed to change password', 'error');
+      this.toastService.show(
+        'Failed to change password. Please try again.',
+        'error'
+      );
+    } finally {
+      this.isSubmitting = false;
     }
   }
 

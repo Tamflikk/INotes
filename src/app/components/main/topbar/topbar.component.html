@@ -1,15 +1,13 @@
 <div
   class="flex items-center justify-between p-4 bg-white border-b border-gray-200"
 >
-  <!-- Título dinámico -->
+  <!-- title -->
   <div class="text-xl font-bold text-gray-900">
-    <!-- Letras más grandes y en negrita -->
     {{ getTitle() }}
   </div>
 
-  <!-- Barra de búsqueda y tuerca -->
   <div class="flex items-center">
-    <!-- Barra de búsqueda -->
+    <!-- searchBar -->
     <div class="relative">
       <input
         type="text"
@@ -18,7 +16,6 @@
         [(ngModel)]="searchQuery"
         (input)="onSearch()"
       />
-      <!-- Icono de búsqueda -->
       <button
         class="absolute right-2 top-2 p-1 text-gray-500 hover:text-blue-500 focus:outline-none"
         (click)="onSearch()"
@@ -40,7 +37,7 @@
       </button>
     </div>
 
-    <!-- Tuerca (icono de configuración) -->
+    <!-- settings -->
     <app-settings-menu></app-settings-menu>
   </div>
 </div>
