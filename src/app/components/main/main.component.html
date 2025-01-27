@@ -20,11 +20,12 @@
       <div class="flex flex-1 overflow-hidden h-full">
         <!-- Note List -->
         <app-note-list
-          [selectedTag]="selectedTag"
-          [showArchived]="showArchived"
-          (noteSelected)="onNoteSelected($event)"
-          class="w-1/4 p-4 overflow-y-auto border-r border-gray-200 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
-        ></app-note-list>
+  [selectedTag]="selectedTag"
+  [showArchived]="showArchived"
+  [selectedNote]="selectedNote" 
+  (noteSelected)="onNoteSelected($event)"
+  class="w-1/4 p-4 overflow-y-auto border-r border-gray-200 [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+></app-note-list>
 
         <!-- Note Editor -->
         <app-note-editor
@@ -33,9 +34,6 @@
           (cancelEdit)="onCancelEdit()"
           class="flex-1 p-6 overflow-y-auto"
         ></app-note-editor>
-
-        <!-- Right Sidebar -->
-        <app-right-sidebar class="w-64 bg-white border-l border-gray-200"></app-right-sidebar>
       </div>
     </div>
   </div>

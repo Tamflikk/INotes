@@ -13,6 +13,8 @@ export class NoteEditorComponent {
   @Input() selectedNote: any = null; // Nota seleccionada para editar
   @Output() saveNote = new EventEmitter<any>(); // Evento para guardar la nota
   @Output() cancelEdit = new EventEmitter<void>(); // Evento para cancelar la edición
+  @Output() archiveNote = new EventEmitter<void>(); // Evento para archivar/desarchivar la nota
+  @Output() deleteNote = new EventEmitter<void>(); // Evento para eliminar la nota
 
   title: string = '';
   content: string = '';
@@ -36,27 +38,33 @@ export class NoteEditorComponent {
   // Guardar la nota
   onSave(): void {
     const note = {
-      id: this.selectedNote ? this.selectedNote.id : null, // Mantener el ID si es una edición
+      id: this.selectedNote ? this.selectedNote.id : null,
       title: this.title,
       content: this.content,
       tags: this.tags.split(',').map((tag: string) => tag.trim()),
       lastUpdate: new Date(),
-      archived: false,
+      archived: this.selectedNote ? this.selectedNote.archived : false,
     };
 
-    if (this.isEditing) {
-      // Actualizar la nota existente
-      Object.assign(this.selectedNote, note);
-    } else {
-      // Crear una nueva nota
-      this.saveNote.emit(note); // Emitir la nueva nota para que MainComponent la guarde
-    }
+    // Emitir el evento saveNote en todos los casos
+    this.saveNote.emit(note);
+    this.resetForm();
   }
 
   // Cancelar la edición
   onCancel(): void {
     this.cancelEdit.emit();
     this.resetForm();
+  }
+
+  // Archivar o desarchivar la nota
+  onArchive(): void {
+    this.archiveNote.emit(); // Emitir evento para archivar/desarchivar la nota
+  }
+
+  // Eliminar la nota
+  onDelete(): void {
+    this.deleteNote.emit(); // Emitir evento para eliminar la nota
   }
 
   // Reiniciar el formulario

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NoteService } from '../services/note.service'; // Importamos el servicio
@@ -9,15 +9,32 @@ import { NoteService } from '../services/note.service'; // Importamos el servici
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   uniqueTags: string[] = [];
   selectedCategory: string | null = 'All Notes';
   selectedTag: string | null = null;
   @Output() categorySelected = new EventEmitter<string>();
   @Output() tagSelected = new EventEmitter<string>();
 
-  constructor(private noteService: NoteService) {
-    this.uniqueTags = this.noteService.getUniqueTags(); // Usamos el servicio
+  constructor(private noteService: NoteService) {}
+
+  ngOnInit(): void {
+    // Inicializar las etiquetas únicas
+    this.uniqueTags = this.noteService.getUniqueTags();
+
+    // Suscribirse al evento noteAdded
+    this.noteService.noteAdded.subscribe(() => {
+      this.uniqueTags = this.noteService.getUniqueTags();
+      // Cuando se añade una nota, seleccionar "All Notes"
+      this.selectedCategory = 'All Notes';
+      this.selectedTag = null;
+    });
+
+    // Suscribirse a cambios de categoría
+    this.noteService.categoryChanged.subscribe((category: string) => {
+      this.selectedCategory = category;
+      this.selectedTag = null;
+    });
   }
 
   isCategorySelected(category: string): boolean {

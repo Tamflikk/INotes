@@ -29,19 +29,17 @@ export class MainComponent {
   selectedTag: string | null = null;
   showArchived: boolean = false;
   isLoading: boolean = true;
-  selectedNote: any = null; // Nota seleccionada para editar
+  selectedNote: any = null;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private noteService: NoteService
   ) {
-    // Verifica si el usuario está autenticado
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
     }
 
-    // Simula una carga de 3 segundos
     setTimeout(() => {
       this.isLoading = false;
     }, 3000);
@@ -49,31 +47,25 @@ export class MainComponent {
 
   // Seleccionar una nota
   onNoteSelected(note: any): void {
-    this.selectedNote = note; // Actualizar la nota seleccionada
+    this.selectedNote = note;
   }
 
-  // Guardar la nota
   onSaveNote(note: any): void {
     if (note.id) {
-      // Actualizar la nota existente
-      const existingNote = this.noteService.getNoteById(note.id);
-      if (existingNote) {
-        Object.assign(existingNote, note);
-      }
+      this.noteService.updateNote(note);
     } else {
-      // Crear una nueva nota
       this.noteService.addNote(note);
-      this.selectedNote = note; // Mantener la nota seleccionada
     }
 
-    // Cambiar a la categoría "All Notes"
+    this.selectedNote = note;
     this.selectedCategory = 'All Notes';
     this.selectedTag = null;
+
+    this.noteService.categoryChanged.emit('All Notes');
   }
 
-  // Cancelar la edición
   onCancelEdit(): void {
-    this.selectedNote = null; // Reiniciar la selección
+    this.selectedNote = null;
   }
 
   updateSelectedCategory(category: string): void {

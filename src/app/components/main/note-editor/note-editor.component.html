@@ -1,3 +1,4 @@
+<!-- Note Editor: Updated Template -->
 <div class="h-full flex flex-col">
   <!-- Título de la nota -->
   <input
@@ -30,7 +31,6 @@
       alt="Last Edited"
       class="w-5 h-5 mr-2"
     />
-    <!-- Texto de la fecha -->
     <p class="text-sm text-gray-500">
       Last edited: {{ selectedNote?.lastUpdate | date: 'mediumDate' || 'Not yet saved' }}
     </p>
@@ -51,18 +51,31 @@
   <div class="border-b border-gray-200 mt-6 mb-4"></div>
 
   <!-- Botones de acción -->
-  <div class="flex justify-end space-x-4">
-    <button
-      (click)="onCancel()"
-      class="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-lg focus:outline-none transition-colors"
-    >
-      Cancel
-    </button>
+  <div class="flex justify-start space-x-4">
+    <!-- Guardar -->
     <button
       (click)="onSave()"
-      class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition-colors"
+      class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition-colors"
     >
       Save Note
+    </button>
+
+    <!-- Archivar/Desarchivar -->
+    <button
+      (click)="onArchive()"
+      class="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 focus:outline-none transition-colors"
+    >
+      <img src="assets/Archive.png" alt="Archive/Unarchive" class="w-4 h-4 mr-2"/>
+      {{ selectedNote?.archived ? 'Unarchive Note' : 'Archive Note' }}
+    </button>
+
+    <!-- Eliminar -->
+    <button
+      (click)="onDelete()"
+      class="flex items-center px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 focus:outline-none transition-colors"
+    >
+      <img src="assets/Delete.png" alt="Delete" class="w-4 h-4 mr-2" />
+      Delete Note
     </button>
   </div>
 </div>
